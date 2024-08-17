@@ -71,7 +71,7 @@ const addUser = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse("User added successfully", newUser));
 });
 
-
+/*
 
 //controller to login user a registered user
 const loginUser = asyncHandler(async(req,res) => {
@@ -140,56 +140,52 @@ const loginUser = asyncHandler(async(req,res) => {
     )
     //send cookies
 })
+*/
 
+const loginUser = asyncHandler(async (req, res) => {
+    const { username, email, password } = req.body;
 
-/*
-const loginUser = asyncHandler(async(req,res) => {
-    const {username,email,password} = req.body;
-    
-    if(!username && !email){
-        throw new ApiError(400,"Username or email is required!");
+    if (!username && !email) {
+        throw new ApiError(400, "Username or email is required!");
     }
-    
+
+    // Find user by username or email
     const user = await User.findOne({
-        $or : [{username},{email}]
+        $or: [{ username }, { email }]
     });
 
-    if(!user){
-        throw new ApiError(404,"User does not exist!");
+    if (!user) {
+        throw new ApiError(404, "User does not exist!");
     }
 
+    // Check if the password is correct
     const isPasswordValid = await user.isPasswordCorrect(password);
-   
-    if(!isPasswordValid){
-        throw new ApiError(401,"Password is incorrect!");
+    if (!isPasswordValid) {
+        throw new ApiError(401, "Password is incorrect!");
     }
 
-    const generateAccessandRefreshToken = async(userId) =>{
-        try{
+    // Generate access and refresh tokens
+    const generateAccessandRefreshToken = async (user) => {
+        try {
             const accesstoken = user.generateAccessToken();
             const refreshtoken = user.generateRefreshToken();
             user.refreshtoken = refreshtoken;
-            await user.save({validateBeforeSave : false});
+            await user.save({ validateBeforeSave: false });
             return { accesstoken, refreshtoken };
-        }catch(error){
-            throw new ApiError(500,"Something went wrong while generating tokens!");
+        } catch (error) {
+            throw new ApiError(500, "Something went wrong while generating tokens!");
         }
     };
 
-    const { accesstoken, refreshtoken } = await generateAccessandRefreshToken(user._id);
+    // Get the generated tokens
+    const { accesstoken, refreshtoken } = await generateAccessandRefreshToken(user);
 
+    // Exclude password and refreshToken from the user details
     const loggedInUser = await User.findById(user._id).select("-password -refreshtoken");
 
-    const options = {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'Lax'
-    };
-
+    // Return the tokens and user details in the response body
     return res
         .status(200)
-        .cookie("accesstoken", accesstoken, options)
-        .cookie("refreshtoken", refreshtoken, options)
         .json(
             new ApiResponse(
                 200,
@@ -198,7 +194,9 @@ const loginUser = asyncHandler(async(req,res) => {
             )
         );
 });
-*/
+
+
+  
 const logOutUser = asyncHandler(async(req,res)=>{
     await User.findByIdAndUpdate(
         req.user._id,
