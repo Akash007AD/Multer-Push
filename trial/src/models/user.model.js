@@ -44,6 +44,13 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    // accesstoken:{
+    //     type:String,
+    // },
+    // refreshtoken:{
+    //     type:String,
+    // }
+    
 }, {
     timestamps: true
 });
@@ -53,7 +60,7 @@ const userSchema = new Schema({
 userSchema.pre("save" , async function (next)  {
     if(!this.isModified("password")) return next()// had this if condition not been used then the password would eb encrypted everytime the user changes any of its information
 
-    this.password = bcrypt.hash(this.password,10)
+    this.password =await bcrypt.hash(this.password,10)
     next()
 })
 

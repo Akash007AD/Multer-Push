@@ -28,8 +28,10 @@ const router = Router();
 //router.route("/login").post(login); ////http://localhost:8000/api/v1/users/login
 
 router.post('/register', addUser);
-router.post("/login",loginUser);
-router.post("/logout",verifyJWT,logOutUser)
+router.get("/login",loginUser);
+router.get("/logout",verifyJWT,logOutUser)
+// router.post("/login",loginUser);
+// router.post("/logout",verifyJWT,logOutUser)
 router.get('/', getAllUsers);
 router.get('/:userId', getUserDetails);
 router.patch('/:userId', updateUser);
