@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-
+/*
 // Controller to add a new stock item
 const addStock = asyncHandler(async (req, res) => {
     const { photo, Mrp, description, units, date_of_produce, growing_practices, place_of_origin, product_id, seller_name } = req.body;
@@ -44,7 +44,8 @@ const addStock = asyncHandler(async (req, res) => {
         place_of_origin,
         product_id,
         seller_name,
-        photo : stockPhoto.url || "",
+        //photo : stockPhoto.url || "",
+        photo
 
     })
 
@@ -52,13 +53,56 @@ const addStock = asyncHandler(async (req, res) => {
     res.status(201).json(new ApiResponse("Stock item added successfully", newStock));
 });
 
+
+import { Product } from "../models/stock.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+*/
+const addStock = asyncHandler(async (req, res) => {
+    const { Mrp, description, units, date_of_produce, growing_practices, place_of_origin, product_id, seller_name } = req.body;
+
+    if ([Mrp, description, units, date_of_produce, growing_practices, place_of_origin, product_id, seller_name].some(
+        (field) => !field?.trim()
+    )) {
+        throw new ApiError(400, "All fields are required!");
+    }
+
+    const photoFile = req.file; // This will be the photo uploaded via multer
+    let photoPath = "";
+
+    if (photoFile) {
+        photoPath = photoFile.path; // Save the file path to the database
+    }
+
+    const newStock = new Product({
+        Mrp,
+        description,
+        units,
+        date_of_produce,
+        growing_practices,
+        place_of_origin,
+        product_id,
+        seller_name,
+        photo: photoPath,
+    });
+
+    await newStock.save();
+    res.status(201).json(new ApiResponse("Stock item added successfully", newStock));
+});
+
+
+
 // Controller to get details of a specific stock item
 const getStockDetails = asyncHandler(async (req, res) => {
+    console.log(req.body);
+    const photo = req.file;
+      
     const { productId } = req.params;
 
-    if (!isValidObjectId(productId)) {
-        throw new ApiError("Invalid Product ID", 400);
-    }
+    // if (!isValidObjectId(productId)) {
+    //     throw new ApiError("Invalid Product ID", 400);
+    // }
 
     const stock = await Product.findById(productId);
 
