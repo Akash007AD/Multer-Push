@@ -2,8 +2,10 @@ import React from 'react'
 import { assets } from '../../assets/assets';
 import { Link } from 'react-router-dom'
 import './Featured_products.css'
+import Csa from '../Header/Csa';
 const Featured_products = () => {
   return (
+    <>
     <div className='featuredproducts'>
       <h1>Featured Products</h1>
       <div className="cards">
@@ -29,6 +31,8 @@ const Featured_products = () => {
             </div>
       </div>
     </div>
+    <Csa/>
+    </>
   )
 }
 

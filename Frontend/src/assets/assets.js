@@ -18,6 +18,7 @@ import wheat from './Wheat.jpg'
 import rice from './Rice.jpg'
 import fruits from './fruit.jpg'
 import vegetables from './vegetables.jpg'
+import farmer from './Farmer.jpg'
 export const assets={
     bag_icon,
     search_icon,
@@ -38,5 +39,6 @@ export const assets={
     wheat,
     rice,
     fruits,
-    vegetables
+    vegetables,
+    farmer
 };
