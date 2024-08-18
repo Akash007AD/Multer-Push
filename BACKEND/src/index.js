@@ -10,8 +10,8 @@ dotenv.config({
 connectDB()
     .then(() => {
         // Start the server after successful database connection
-        const port = process.env.PORT || 3026;
-        app.listen(port, () => {
+        const port = process.env.PORT || 8000;
+        app.listen(port||8000, () => {
             console.log(`⚙️ Server is running at http://localhost:${port}`);
         });
     })

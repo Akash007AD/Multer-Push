@@ -9,7 +9,7 @@ const stockSchema = new Schema({
         //required: true,
     },
     Mrp: {
-        type: Number,
+        type: String,
         required: true,
     },
     description: {
@@ -17,7 +17,7 @@ const stockSchema = new Schema({
         default: " ",
     },
     units: {
-        type: Number,
+        type: String,
         required: true,
     },
     date_of_produce: {

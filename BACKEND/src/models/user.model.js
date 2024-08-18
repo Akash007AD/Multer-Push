@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
-import pkg from 'jsonwebtoken'
-const jwt = pkg
+import jwt from 'jsonwebtoken'
+//const jwt = pkg
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
@@ -11,6 +11,9 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    // coverImage :{
+    //     type : String,
+    // },
     name: {
         type: String,
         required: true,
@@ -41,6 +44,13 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    // accesstoken:{
+    //     type:String,
+    // },
+    // refreshtoken:{
+    //     type:String,
+    // }
+    
 }, {
     timestamps: true
 });
@@ -50,16 +60,16 @@ const userSchema = new Schema({
 userSchema.pre("save" , async function (next)  {
     if(!this.isModified("password")) return next()// had this if condition not been used then the password would eb encrypted everytime the user changes any of its information
 
-    this.password = bcrypt.hash(this.password,10)
+    this.password =await bcrypt.hash(this.password,10)
     next()
 })
 
 //mogoose allows us to use any method of our choice and make it one as per needed
-userSchema.methods.isPassword = async function(password){
+userSchema.methods.isPasswordCorrect = async function(password){
     return await bcrypt.compare(password , this.password)
 }
 
-userSchema.methods.generateAccessToken = async function () {
+userSchema.methods.generateAccessToken =  function (){
     return jwt.sign(
         {
             _id : this._id,
@@ -78,7 +88,7 @@ userSchema.methods.generateAccessToken = async function () {
         }
     )
 }
-userSchema.methods.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken =  function () {
     return jwt.sign(
         {
             _id : this._id,
@@ -90,4 +100,6 @@ userSchema.methods.generateRefreshToken = async function () {
     )
 }
 
+
+//refresh token and access token are the same damn thing but the duration of refresh token is more than that of access token usage of only access token is alos allowed
 export const User = mongoose.model("User", userSchema);
