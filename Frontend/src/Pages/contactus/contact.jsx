@@ -33,7 +33,7 @@ export default function contact(){
   return (
     <>
     <Navbar/>
-    <div className='contact'>
+    <div className='contact container'>
       <form onSubmit={onSubmit}>
       <h1>Contact Form</h1>
         <div className="input-box">
