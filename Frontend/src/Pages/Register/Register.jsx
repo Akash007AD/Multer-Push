@@ -28,6 +28,9 @@ export default function Register() {
     console.log(user)
     fetch("http://localhost:3026/api/v1/users/register", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json" // Add this line
+      },
         body: JSON.stringify(user),
     })
     .then((response) =>response.json())
